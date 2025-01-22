@@ -31,7 +31,6 @@ export default function SelectCity() {
       // Update store
       selectCity(currentCop.id, city);
 
-      // Check if there are more cops to select cities
       const nextUnassignedIndex = cops.findIndex(
         (cop, index) => index > currentCopIndex && cop.selectedCity === null
       );

@@ -1,4 +1,4 @@
-import type { GameState } from "./types";
+import type { GameState, InvestigationResult } from "./types";
 import type { Cop, City, Vehicle, Criminal } from "@/data/types";
 
 export interface GameInitializationData {
@@ -44,6 +44,20 @@ export const createGameActions = (
           : 0,
     })),
 
+  setInvestigationResult: (result: InvestigationResult) =>
+    set(() => ({
+      investigationResult: result,
+      gameStatus: result.success ? "WON" : "LOST",
+    })),
+
+  completeGame: (result: InvestigationResult) =>
+    set(() => ({
+      investigationResult: result,
+      gameStatus: result.success ? "WON" : "LOST",
+      currentCopIndex: 0, // Reset cop index
+    })),
+
+  // Modify existing resetGame to include investigation result
   resetGame: () =>
     set((state) => ({
       cops: state.cops.map((cop) => ({
@@ -53,5 +67,6 @@ export const createGameActions = (
       })),
       currentCopIndex: 0,
       gameStatus: "NOT_STARTED",
+      investigationResult: null, // Reset investigation result
     })),
 });

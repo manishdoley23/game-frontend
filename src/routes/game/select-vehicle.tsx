@@ -3,23 +3,40 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAvailableVehicles, useCurrentCop, useGameStore } from "@/lib/store";
 import { Vehicle } from "@/data/types";
+import { useCallback } from "react";
+import { submitInvestigationChoices } from "@/data/api";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SelectVehicle() {
   const navigate = useNavigate();
   const availableVehicles = useAvailableVehicles();
   const currentCop = useCurrentCop();
-  const { selectVehicle, moveToNextCop, cops } = useGameStore();
+  const { toast } = useToast();
+  const {
+    selectVehicle,
+    moveToNextCop,
+    setInvestigationResult,
+    cops,
+    currentCopIndex,
+  } = useGameStore();
 
-  if (!currentCop || !currentCop.selectedCity) {
-    navigate("/game/select-city");
-    return null;
-  }
+  const handleVehicleSelect = useCallback(
+    async (vehicle: Vehicle) => {
+      if (!currentCop) return;
 
-  const handleVehicleSelect = (vehicle: Vehicle) => {
-    selectVehicle(currentCop.id, vehicle);
-    console.log("here");
-    moveToNextCop();
-  };
+      selectVehicle(currentCop.id, vehicle);
+
+      const nextUnassignedIndex = cops.findIndex(
+        (cop, index) => index > currentCopIndex && cop.selectedVehicle === null
+      );
+      console.log("nextUnassignedIndex: ", nextUnassignedIndex);
+
+      if (nextUnassignedIndex !== -1) {
+        moveToNextCop();
+      }
+    },
+    [currentCop, cops, currentCopIndex, selectVehicle, moveToNextCop]
+  );
 
   // Check if all cops have selected both city and vehicle
   const isAllSelectionsComplete = cops.every(
@@ -28,31 +45,27 @@ export default function SelectVehicle() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("/api/game/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cops: cops.map((cop) => ({
-            id: cop.id,
-            selectedCity: cop.selectedCity?.id,
-            selectedVehicle: cop.selectedVehicle?.id,
-          })),
-        }),
+      console.log("Submitting game choices");
+      console.log("cops:", cops);
+      const response = await submitInvestigationChoices({
+        selectedChoices: cops,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to submit game choices");
-      }
-
-      const result = await response.json();
-      navigate("/result", { state: { result } });
+      setInvestigationResult(response);
+      navigate("/result");
     } catch (error) {
       console.error("Error submitting game choices:", error);
-      // You might want to show an error toast or message here
+      toast({
+        title: "Failed to submit choices",
+        variant: "destructive",
+      });
     }
   };
+
+  if (!currentCop || !currentCop.selectedCity) {
+    navigate("/game/select-city");
+    return null;
+  }
 
   return (
     <div className="space-y-6">

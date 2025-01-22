@@ -6,6 +6,7 @@ import App from "./App.tsx";
 import GameLayout from "./routes/game/game-layout.tsx";
 import SelectCity from "./routes/game/select-city.tsx";
 import SelectVehicle from "./routes/game/select-vehicle.tsx";
+import Result from "./routes/result/result.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="game/select-city" element={<SelectCity />} />
           <Route path="game/select-vehicle" element={<SelectVehicle />} />
         </Route>
+        <Route path="/result" element={<Result />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

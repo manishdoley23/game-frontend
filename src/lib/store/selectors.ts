@@ -50,7 +50,6 @@ const updateVehiclesWithCounts = (
   }));
 };
 
-// Selectors
 export const useAvailableCities = () => {
   const { cities, cops } = useGameStore();
   const excludedCopId = cops[0]?.id;

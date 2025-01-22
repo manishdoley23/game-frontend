@@ -1,12 +1,12 @@
 import { Outlet } from "react-router";
-import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useCops, useGameData, useVehicle } from "@/lib/hooks";
-import { Button } from "@/components/ui/button";
 import PageWrapper from "@/components/ui/page-wrapper";
 import { useEffect } from "react";
 import { useGameStore } from "@/lib/store";
 import CopCard from "@/components/cops/cop-card";
+import ErrorPage from "@/components/ui/error-page";
 
 export default function GameLayout() {
   const initializeGame = useGameStore((state) => state.initializeGame);
@@ -48,17 +48,7 @@ export default function GameLayout() {
   }
 
   if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
-        <Card className="p-6">
-          <CardTitle className="text-red-500">Error</CardTitle>
-          <CardContent>{error}</CardContent>
-          <CardFooter>
-            <Button onClick={() => window.location.reload()}>Try Again</Button>
-          </CardFooter>
-        </Card>
-      </div>
-    );
+    return <ErrorPage error={error} />;
   }
   return (
     <PageWrapper>

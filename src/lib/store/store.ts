@@ -10,6 +10,7 @@ const initialState = {
   criminal: null,
   currentCopIndex: 0,
   gameStatus: "NOT_STARTED",
+  investigationResult: null,
 } as const;
 
 export const useGameStore = create<GameStore>()(

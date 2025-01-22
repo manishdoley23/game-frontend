@@ -1,7 +1,4 @@
-import { getCities } from "@/data/api/city-api";
-import { getCops } from "@/data/api/cop-api";
-import { getCriminal } from "@/data/api/criminal-api";
-import { getVehicles } from "@/data/api/vehicle-api";
+import { getCities, getCops, getCriminal, getVehicles } from "@/data/api";
 import { City } from "@/data/types/city-types";
 import { Cop } from "@/data/types/cop-types";
 import { Criminal } from "@/data/types/criminal-types";
