@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PageWrapper from "@/components/ui/page-wrapper";
 import { useGameStore } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
+import { resetGame } from "@/data/api";
 
 export default function Result() {
   const navigate = useNavigate();
@@ -121,7 +122,10 @@ export default function Result() {
             Return to Home
           </Button>
           <Button
-            onClick={() => navigate("/game/select-city")}
+            onClick={async () => {
+              await resetGame();
+              navigate("/game/select-city");
+            }}
             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
           >
             Try Again

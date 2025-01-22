@@ -14,8 +14,6 @@ export default function SelectCity() {
     useGameStore();
   const currentCop = cops[currentCopIndex];
 
-  console.log("cities: ", cities);
-
   // Memoize available cities calculation
   const availableCities = cities.filter(
     (city) =>
@@ -34,7 +32,6 @@ export default function SelectCity() {
       const nextUnassignedIndex = cops.findIndex(
         (cop, index) => index > currentCopIndex && cop.selectedCity === null
       );
-      console.log("nextUnassignedIndex: ", nextUnassignedIndex);
 
       if (nextUnassignedIndex !== -1) {
         moveToNextCop();

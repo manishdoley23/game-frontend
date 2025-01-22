@@ -29,7 +29,6 @@ export default function SelectVehicle() {
       const nextUnassignedIndex = cops.findIndex(
         (cop, index) => index > currentCopIndex && cop.selectedVehicle === null
       );
-      console.log("nextUnassignedIndex: ", nextUnassignedIndex);
 
       if (nextUnassignedIndex !== -1) {
         moveToNextCop();
@@ -45,8 +44,6 @@ export default function SelectVehicle() {
 
   const handleSubmit = async () => {
     try {
-      console.log("Submitting game choices");
-      console.log("cops:", cops);
       const response = await submitInvestigationChoices({
         selectedChoices: cops,
       });
