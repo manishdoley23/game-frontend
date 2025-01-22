@@ -1,87 +1,65 @@
 import { getCities } from "@/data/api/city-api";
+import { getCops } from "@/data/api/cop-api";
 import { getCriminal } from "@/data/api/criminal-api";
+import { getVehicles } from "@/data/api/vehicle-api";
 import { City } from "@/data/types/city-types";
+import { Cop } from "@/data/types/cop-types";
 import { Criminal } from "@/data/types/criminal-types";
+import { Vehicle } from "@/data/types/vehicle-types";
 import { useEffect, useMemo, useState } from "react";
-
-interface CriminalState {
-  data: Criminal | null;
+interface AsyncState<T> {
+  data: T;
   isLoading: boolean;
   error: string | null;
 }
 
-interface CitiesState {
-  data: City[];
-  isLoading: boolean;
-  error: string | null;
-}
-
-export const useCriminal = () => {
-  const [state, setState] = useState<CriminalState>({
-    data: null,
+// Generic hook for handling async data fetching
+const useAsync = <T>(asyncFn: () => Promise<T>): AsyncState<T> => {
+  const [state, setState] = useState<AsyncState<T>>({
+    data: null as unknown as T,
     isLoading: true,
     error: null,
   });
 
   useEffect(() => {
-    const fetchCriminal = async () => {
+    const fetchData = async () => {
       try {
         setState((prev) => ({ ...prev, isLoading: true }));
-        const criminalData = await getCriminal();
+        const data = await asyncFn();
         setState({
-          data: criminalData,
+          data,
           isLoading: false,
           error: null,
         });
       } catch (err) {
         setState({
-          data: null,
+          data: null as unknown as T,
           isLoading: false,
-          error:
-            err instanceof Error
-              ? err.message
-              : "Failed to fetch criminal data",
+          error: err instanceof Error ? err.message : "Failed to fetch data",
         });
       }
     };
 
-    fetchCriminal();
-  }, []);
+    fetchData();
+  }, [asyncFn]);
 
   return state;
 };
 
+export const useCriminal = () => {
+  return useAsync<Criminal | null>(getCriminal);
+};
+
 export const useCities = () => {
-  const [state, setState] = useState<CitiesState>({
-    data: [],
-    isLoading: true,
-    error: null,
-  });
+  return useAsync<City[]>(getCities);
+};
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        setState((prev) => ({ ...prev, isLoading: true }));
-        const citiesData = await getCities();
-        setState({
-          data: citiesData,
-          isLoading: false,
-          error: null,
-        });
-      } catch (err) {
-        setState({
-          data: [],
-          isLoading: false,
-          error:
-            err instanceof Error ? err.message : "Failed to fetch cities data",
-        });
-      }
-    };
+export const useCops = () => {
+  return useAsync<Cop[]>(getCops);
+};
 
-    fetchCities();
-  }, []);
-
-  return state;
+export const useVehicle = () => {
+  return useAsync<Vehicle[]>(getVehicles);
 };
 
 export const useGameData = () => {

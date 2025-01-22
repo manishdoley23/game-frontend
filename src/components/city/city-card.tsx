@@ -17,7 +17,7 @@ export const CityCard: React.FC<{ city: City }> = ({ city }) => (
     </CardHeader>
     <CardContent>
       <img
-        src={city.imrSrc}
+        src={city.imgSrc}
         alt={city.name}
         className="w-full h-48 object-cover rounded-md mb-4"
         loading="lazy"

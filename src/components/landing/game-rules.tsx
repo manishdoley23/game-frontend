@@ -29,7 +29,7 @@ export default function GameRules() {
       <CardFooter>
         <Button
           className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-          onClick={() => navigate("/game")}
+          onClick={() => navigate("/game/select-city")}
         >
           Accept Mission
         </Button>

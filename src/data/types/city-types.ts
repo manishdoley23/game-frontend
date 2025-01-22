@@ -3,5 +3,5 @@ export interface City {
   name: string;
   distance: number;
   description: string;
-  imrSrc: string;
+  imgSrc: string;
 }

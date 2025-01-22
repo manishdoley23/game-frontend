@@ -1,6 +1,8 @@
+import { City } from "./city-types";
+
 export interface Criminal {
   id: string;
   name: string;
-  cityHiding: string | null;
+  cityHiding: City | null;
   imgSrc: string;
 }

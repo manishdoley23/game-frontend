@@ -5,6 +5,7 @@ import { useGameData } from "./lib/hooks";
 import Hero from "./components/landing/hero";
 import CityContainer from "./components/city/city-container";
 import GameRules from "./components/landing/game-rules";
+import PageWrapper from "./components/ui/page-wrapper";
 
 export default function LandingPage() {
   const { gameData, isLoading, error } = useGameData();
@@ -24,12 +25,10 @@ export default function LandingPage() {
       </Card>
     </div>
   ) : (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
-      <div className="w-full mx-auto space-y-8">
-        <Hero criminalImage={gameData.criminal?.imgSrc} />
-        <CityContainer cityData={gameData.cities} />
-        <GameRules />
-      </div>
-    </div>
+    <PageWrapper>
+      <Hero criminalImage={gameData.criminal?.imgSrc} />
+      <CityContainer cityData={gameData.cities} />
+      <GameRules />
+    </PageWrapper>
   );
 }
