@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useGameData } from "./lib/hooks";
+import Hero from "./components/landing/hero";
+import CityContainer from "./components/city/city-container";
+import GameRules from "./components/landing/game-rules";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function LandingPage() {
+  const { gameData, isLoading, error } = useGameData();
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+  return isLoading ? (
+    <div className="min-h-screen flex items-center justify-center">
+      <LoadingSpinner size="lg" />
+    </div>
+  ) : error ? (
+    <div className="min-h-screen flex items-center justify-center">
+      <Card className="p-6">
+        <CardTitle className="text-red-500">Error</CardTitle>
+        <CardContent>{error}</CardContent>
+        <CardFooter>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
+        </CardFooter>
+      </Card>
+    </div>
+  ) : (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
+      <div className="w-full mx-auto space-y-8">
+        <Hero criminalImage={gameData.criminal?.imgSrc} />
+        <CityContainer cityData={gameData.cities} />
+        <GameRules />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
-
-export default App
