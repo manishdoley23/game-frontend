@@ -1,50 +1,57 @@
-# React + TypeScript + Vite
+# Game Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+##### Game Link: https://game-frontend-alpha.vercel.app/
 
-Currently, two official plugins are available:
+A game where you have 3 cops and guess the location of the criminal. Given the 3 locations and 3 vehicles to choose from if the location is correct and the vehicle has enough range to make a round trip and the vehicle is available (i.e., count > 0) you win else you lose
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+#### City Choice
 
-## Expanding the ESLint configuration
+| City         | Distance from current city |
+| ------------ | -------------------------- |
+| Yapkashnagar | 60 KM                      |
+| Lihaspur     | 50 KM                      |
+| Narmis City  | 40 KM                      |
+| Shekharvati  | 30 KM                      |
+| Nuravgram    | 20 KM                      |
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+#### Vehicle Choice
 
-- Configure the top-level `parserOptions` property like this:
+| Kind    | Range  | Count |
+| ------- | ------ | ----- |
+| EV Bike | 60 KM  | 2     |
+| EV Car  | 100 KM | 1     |
+| EV SUV  | 120 KM | 1     |
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Frontend
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+This is the frontend of the game the backend is in https://github.com/manishdoley23/game-backend.git
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Tech Stack
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+#### Core Technologies
+
+- **Language:** TypeScript
+- **Framework:** React
+- **Routing:** React Router
+- **State Management:** Zustand
+- **Styling:** Tailwind
+
+#### UI Components & Utilities
+
+- Shadcn-ui (`shadcn-ui/ui`)
+
+#### Build Tools & Development
+
+- **Build Tool:** Vite 6
+- **Package Manager:** yarn
+
+### Scripts
+
+```bash
+# Start development server
+yarn dev
+
+# Build for production
+yarn build
+
 ```

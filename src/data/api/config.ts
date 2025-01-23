@@ -12,7 +12,6 @@ export const api: AxiosInstance = axios.create({
   },
 });
 
-// Response interceptor
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
@@ -28,7 +27,7 @@ api.interceptors.response.use(
       // The request was made but no response was received
       console.error("Network Error:", error.request);
     } else {
-      // Something happened in setting up the request that triggered an Error
+      // Something happened
       console.error("Request Error:", error.message);
     }
     return Promise.reject(error);
