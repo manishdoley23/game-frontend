@@ -1,12 +1,12 @@
 import { Cop } from "@/data/types";
 import { Card, CardContent } from "../ui/card";
 import { useGameStore } from "@/lib/store";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
 export default function CopCard({ cop }: { cop: Cop }) {
-  // Get updated data from store instead of props
-  const { cities, vehicles } = useGameStore();
+  const cities = useGameStore((state) => state.cities);
+  const vehicles = useGameStore((state) => state.vehicles);
 
-  // Get the most up-to-date cop data from store
   const updatedCop = useGameStore((state) =>
     state.cops.find((c) => c.id === cop.id)
   );
@@ -27,10 +27,10 @@ export default function CopCard({ cop }: { cop: Cop }) {
     (v) => v.id === updatedCop?.selectedVehicle?.id
   );
 
-  if (!updatedCop) return null;
+  if (!updatedCop) return <LoadingSpinner />;
 
   return (
-    <Card className="bg-slate-800/50 border-slate-700 overflow-hidden">
+    <Card className="bg-slate-800/50 border-slate-700 overflow-hidden text-slate-400">
       <CardContent className="p-6">
         <div className="space-y-4">
           {/* Cop Header */}
@@ -56,7 +56,7 @@ export default function CopCard({ cop }: { cop: Cop }) {
                 Selected City
               </div>
               {selectedCity ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-start justify-center gap-2 flex-col lg:flex-row">
                   <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-700">
                     <img
                       src={selectedCity.imgSrc}
@@ -82,11 +82,11 @@ export default function CopCard({ cop }: { cop: Cop }) {
 
             {/* Vehicle Selection */}
             <div className="space-y-2">
-              <div className="text-sm font-medium text-slate-400">
+              <div className="text-xs md:text-sm font-medium text-slate-400">
                 Selected Vehicle
               </div>
               {selectedVehicle ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-start gap-2 flex-col lg:flex-row">
                   <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-700">
                     <img
                       src={selectedVehicle.imgSrc}

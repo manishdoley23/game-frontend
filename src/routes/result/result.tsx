@@ -8,7 +8,9 @@ import { resetGame } from "@/data/api";
 
 export default function Result() {
   const navigate = useNavigate();
-  const { investigationResult } = useGameStore();
+  const investigationResult = useGameStore(
+    (state) => state.investigationResult
+  );
 
   if (!investigationResult) {
     navigate("/");
@@ -16,6 +18,11 @@ export default function Result() {
   }
 
   const { success, message, winner, hints, gameStatus } = investigationResult;
+
+  const resetGameHandler = async () => {
+    await resetGame();
+    navigate("/");
+  };
 
   return (
     <PageWrapper>
@@ -37,11 +44,11 @@ export default function Result() {
         </div>
 
         {/* Criminal Location Card */}
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-slate-800/50 border-slate-700 text-slate-400">
           <CardHeader>
-            <CardTitle>Criminal's Location</CardTitle>
+            <CardTitle className="text-2xl">Criminal's Location</CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center gap-6">
+          <CardContent className="flex items-center gap-6 flex-col md:flex-row">
             <div className="relative w-32 h-32">
               <img
                 src={gameStatus?.criminal.imgSrc}
@@ -70,15 +77,15 @@ export default function Result() {
 
         {/* Winner or Hints Section */}
         {success ? (
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-slate-800/50 border-slate-700 text-slate-400">
             <CardHeader>
-              <CardTitle>Successful Capture</CardTitle>
+              <CardTitle className="text-xl">Successful Capture</CardTitle>
             </CardHeader>
             <CardContent className="flex items-center gap-6">
               <img
                 src={winner?.imgSrc}
                 alt={winner?.name}
-                className="w-24 h-24 rounded-full"
+                className="w-24 h-24 rounded-full object-cover"
               />
               <div>
                 <h3 className="text-xl font-bold text-green-400">
@@ -92,9 +99,9 @@ export default function Result() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-slate-800/50 border-slate-700 text-slate-400">
             <CardHeader>
-              <CardTitle>Investigation Results</CardTitle>
+              <CardTitle className="text-xl">Investigation Results</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {hints?.map((hint, index) => (
@@ -102,7 +109,10 @@ export default function Result() {
                   key={index}
                   className="flex items-center gap-4 p-4 rounded-lg bg-slate-700/50"
                 >
-                  <Badge variant="outline" className="h-8 w-8 rounded-full">
+                  <Badge
+                    variant="outline"
+                    className="h-8 w-8 rounded-full text-slate-400"
+                  >
                     {index + 1}
                   </Badge>
                   <p className="text-slate-300">{hint}</p>
@@ -113,22 +123,12 @@ export default function Result() {
         )}
 
         {/* Action Buttons */}
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center">
           <Button
-            variant="outline"
-            onClick={() => navigate("/")}
-            className="bg-slate-800 hover:bg-slate-700"
-          >
-            Return to Home
-          </Button>
-          <Button
-            onClick={async () => {
-              await resetGame();
-              navigate("/game/select-city");
-            }}
+            onClick={resetGameHandler}
             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
           >
-            Try Again
+            Play Again
           </Button>
         </div>
       </div>

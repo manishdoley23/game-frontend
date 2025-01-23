@@ -1,8 +1,5 @@
 import { getCities, getCops, getCriminal, getVehicles } from "@/data/api";
-import { City } from "@/data/types/city-types";
-import { Cop } from "@/data/types/cop-types";
-import { Criminal } from "@/data/types/criminal-types";
-import { Vehicle } from "@/data/types/vehicle-types";
+import { City, Cop, Criminal, Vehicle } from "@/data/types";
 import { useEffect, useMemo, useState } from "react";
 interface AsyncState<T> {
   data: T;
@@ -10,7 +7,6 @@ interface AsyncState<T> {
   error: string | null;
 }
 
-// Generic hook for handling async data fetching
 const useAsync = <T>(asyncFn: () => Promise<T>): AsyncState<T> => {
   const [state, setState] = useState<AsyncState<T>>({
     data: null as unknown as T,
@@ -62,6 +58,8 @@ export const useVehicle = () => {
 export const useGameData = () => {
   const criminal = useCriminal();
   const cities = useCities();
+  const vehicles = useVehicle();
+  const cops = useCops();
 
   const combinedState = useMemo(() => {
     return {
@@ -70,9 +68,11 @@ export const useGameData = () => {
       gameData: {
         criminal: criminal.data,
         cities: cities.data,
+        vehicles: vehicles.data,
+        cops: cops.data,
       },
     };
-  }, [criminal, cities]);
+  }, [criminal, cities, vehicles, cops]);
 
   return combinedState;
 };

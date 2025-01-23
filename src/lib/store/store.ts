@@ -1,9 +1,12 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import type { GameStore } from "./types";
+import type { GameState, GameStore } from "./types";
 import { createGameActions } from "./actions";
 
-const initialState = {
+export const initialState: GameState = {
+  isInitialized: false,
+  isLoading: true,
+  error: null,
   cops: [],
   cities: [],
   vehicles: [],

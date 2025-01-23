@@ -1,4 +1,4 @@
-import { City } from "@/data/types/city-types";
+import { City } from "@/data/types";
 import { CityCard } from "./city-card";
 
 export default function CityContainer({ cityData }: { cityData: City[] }) {

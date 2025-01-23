@@ -1,4 +1,4 @@
-import { City } from "@/data/types/city-types";
+import { City } from "@/data/types";
 import {
   Card,
   CardContent,
@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "../ui/card";
 
-export const CityCard: React.FC<{ city: City }> = ({ city }) => (
+export const CityCard = ({ city }: { city: City }) => (
   <Card key={city.id} className="bg-slate-800/50 border-slate-700">
     <CardHeader>
       <CardTitle className="text-xl text-slate-400">{city.name}</CardTitle>

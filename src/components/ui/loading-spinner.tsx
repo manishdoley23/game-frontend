@@ -9,7 +9,7 @@ export const LoadingSpinner: React.FC<{ size?: "sm" | "md" | "lg" }> = ({
 
   return (
     <div
-      className={`animate-spin rounded-full border-4 border-primary border-t-transparent ${sizeClasses[size]}`}
+      className={`animate-spin rounded-full border-4 border-neutral-50 border-t-transparent ${sizeClasses[size]}`}
     />
   );
 };

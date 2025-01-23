@@ -1,8 +1,5 @@
-import { Vehicle } from "../types/vehicle-types";
 import { api } from "./config";
-import { Cop } from "../types/cop-types";
-import { Criminal } from "../types/criminal-types";
-import { City } from "../types/city-types";
+import { Vehicle, Cop, Criminal, City } from "../types/";
 
 export async function getCities(): Promise<City[]> {
   try {

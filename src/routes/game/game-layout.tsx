@@ -1,55 +1,27 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { Card, CardContent } from "@/components/ui/card";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useCops, useGameData, useVehicle } from "@/lib/hooks";
 import PageWrapper from "@/components/ui/page-wrapper";
-import { useEffect } from "react";
-import { useGameStore } from "@/lib/store";
 import CopCard from "@/components/cops/cop-card";
-import ErrorPage from "@/components/ui/error-page";
+import { useGameStore } from "@/lib/store";
+import LoadingPage from "@/components/ui/loading-page";
+import { useEffect } from "react";
 
 export default function GameLayout() {
-  const initializeGame = useGameStore((state) => state.initializeGame);
-
-  const {
-    gameData,
-    error: gameDataError,
-    isLoading: gameDataLoading,
-  } = useGameData();
-
-  const { data: cops, error: copsError, isLoading: copsLoading } = useCops();
-
-  const {
-    data: vehicles,
-    error: vehiclesError,
-    isLoading: vehiclesLoading,
-  } = useVehicle();
-
-  const isLoading = gameDataLoading || copsLoading || vehiclesLoading;
-  const error = gameDataError || copsError || vehiclesError;
+  const navigate = useNavigate();
+  const criminal = useGameStore((state) => state.criminal);
+  const cities = useGameStore((state) => state.cities);
+  const cops = useGameStore((state) => state.cops);
 
   useEffect(() => {
-    if (!isLoading && !error && gameData && cops && vehicles) {
-      initializeGame({
-        cops,
-        cities: gameData.cities,
-        vehicles,
-        criminal: gameData.criminal!,
-      });
+    if (!criminal || !cities || !cops) {
+      navigate("/");
     }
-  }, [gameData, cops, vehicles, initializeGame, isLoading, error]);
+  }, [cities, cops, criminal, navigate]);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
+  if (!criminal || !cities || !cops) {
+    return <LoadingPage />;
   }
 
-  if (error) {
-    return <ErrorPage error={error} />;
-  }
   return (
     <PageWrapper>
       {/* Criminal Section */}
@@ -57,22 +29,20 @@ export default function GameLayout() {
         {/* Criminal's Last Known Location */}
         <Card className="bg-slate-800/50 border-slate-700">
           <CardContent className="p-6">
-            <div className="flex items-start gap-8">
+            <div className="flex flex-col items-start gap-8 md:flex-row">
               <div className="flex items-center gap-6">
                 <img
-                  src={gameData.criminal?.imgSrc}
+                  src={criminal?.imgSrc}
                   alt="Criminal"
                   className="w-24 h-24 object-contain rounded-lg"
                 />
                 <div className="relative">
                   <img
                     src={
-                      gameData.criminal?.cityHiding
-                        ? gameData.cities.find(
-                            (c) => c.id === gameData.criminal?.cityHiding?.id
-                          )?.imgSrc
-                        : // TODO: Default image for unknown location
-                          "/question-mark.png"
+                      criminal?.cityHiding
+                        ? cities.find((c) => c.id === criminal?.cityHiding?.id)
+                            ?.imgSrc
+                        : ""
                     }
                     alt="Hidden Location"
                     className="w-32 h-32 object-cover rounded-lg filter blur-sm"

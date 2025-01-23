@@ -1,18 +1,15 @@
-import type { GameState, InvestigationResult } from "./types";
-import type { Cop, City, Vehicle, Criminal } from "@/data/types";
-
-export interface GameInitializationData {
-  cops: Cop[];
-  cities: City[];
-  vehicles: Vehicle[];
-  criminal: Criminal;
-}
+import { initialState } from "./store";
+import type { GameState } from "./types";
+import type { City, Vehicle, InvestigationResult } from "@/data/types";
 
 export const createGameActions = (
   set: (fn: (state: GameState) => Partial<GameState>) => void
 ) => ({
-  initializeGame: (data: GameInitializationData) =>
+  initializeGame: (data: Partial<GameState>) =>
     set(() => ({
+      error: null,
+      isInitialized: true,
+      isLoading: false,
       cops: data.cops,
       cities: data.cities,
       vehicles: data.vehicles,
@@ -20,6 +17,15 @@ export const createGameActions = (
       gameStatus: "NOT_STARTED",
       currentCopIndex: 0,
     })),
+
+  setError: (error: string) =>
+    set(() => ({
+      isInitialized: false,
+      isLoading: false,
+      error,
+    })),
+
+  resetGame: () => set(() => initialState),
 
   selectCity: (copId: string, city: City) =>
     set((state) => ({
@@ -54,19 +60,6 @@ export const createGameActions = (
     set(() => ({
       investigationResult: result,
       gameStatus: result.success ? "WON" : "LOST",
-      currentCopIndex: 0, // Reset cop index
-    })),
-
-  // Modify existing resetGame to include investigation result
-  resetGame: () =>
-    set((state) => ({
-      cops: state.cops.map((cop) => ({
-        ...cop,
-        selectedCity: null,
-        selectedVehicle: null,
-      })),
       currentCopIndex: 0,
-      gameStatus: "NOT_STARTED",
-      investigationResult: null, // Reset investigation result
     })),
 });
