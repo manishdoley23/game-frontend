@@ -2,7 +2,7 @@
 
 ##### Game Link: https://game-frontend-alpha.vercel.app/
 
-A game where you have 3 cops and guess the location of the criminal. Given the 3 locations and 3 vehicles to choose from if the location is correct and the vehicle has enough range to make a round trip and the vehicle is available (i.e., count > 0) you win else you lose
+A game where you have 3 cops and guess the location of the criminal. Given the 5 locations and 3 vehicles to choose from if the location is correct and the vehicle has enough range to make a round trip and the vehicle is available (i.e., count > 0) you win else you lose
 
 #### City Choice
 
