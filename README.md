@@ -48,10 +48,20 @@ This is the frontend of the game the backend is in https://github.com/manishdole
 ### Scripts
 
 ```bash
+Clone the repository
+git clone https://github.com/manishdoley23/game-frontend.git
+
+cd game-frontend
+
+# Install dependencies
+yarn
+
 # Start development server
 yarn dev
 
 # Build for production
 yarn build
 
+# Start production server
+yarn start
 ```
