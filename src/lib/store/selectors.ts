@@ -69,7 +69,7 @@ export const useAvailableVehicles = () => {
 };
 
 export const useCurrentCop = () =>
-  useGameStore((state) => state.cops[state.currentCopIndex] || null);
+  useGameStore((state) => state.cops[state.currentCopIndex ?? 0] || null);
 
 export const checkWinCondition = (state: GameState): boolean => {
   if (!state.criminal?.cityHiding) return false;
