@@ -1,9 +1,16 @@
 import { useGameStore } from "@/lib/store";
 import { LoadingSpinner } from "../ui/loading-spinner";
+import { Cop } from "@/data/types";
+import { useEffect, useState } from "react";
 
 export default function CurrentCopCard() {
   const { cops, currentCopIndex } = useGameStore();
-  const currentCop = cops[currentCopIndex];
+  const [currentCop, setCurrentCop] = useState<Cop | null>(null);
+
+  useEffect(() => {
+    if (currentCopIndex === null) return;
+    setCurrentCop(cops[currentCopIndex]);
+  }, [cops, currentCopIndex]);
 
   if (!currentCop) return <LoadingSpinner />;
 

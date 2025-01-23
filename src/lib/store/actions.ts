@@ -1,6 +1,6 @@
 import { initialState } from "./store";
 import type { GameState } from "./types";
-import type { City, Vehicle, InvestigationResult } from "@/data/types";
+import type { InvestigationResult, Cop } from "@/data/types";
 
 export const createGameActions = (
   set: (fn: (state: GameState) => Partial<GameState>) => void
@@ -27,28 +27,42 @@ export const createGameActions = (
 
   resetGame: () => set(() => initialState),
 
-  selectCity: (copId: string, city: City) =>
+  updateCop: (
+    copId: string,
+    updates: Partial<Pick<Cop, "selectedCity" | "selectedVehicle">>
+  ) =>
     set((state) => ({
       cops: state.cops.map((cop) =>
-        cop.id === copId ? { ...cop, selectedCity: city } : cop
+        cop.id === copId ? { ...cop, ...updates } : cop
       ),
-      gameStatus: "IN_PROGRESS",
+      gameStatus: updates.selectedCity ? "IN_PROGRESS" : state.gameStatus,
     })),
 
-  selectVehicle: (copId: string, vehicle: Vehicle) =>
-    set((state) => ({
-      cops: state.cops.map((cop) =>
-        cop.id === copId ? { ...cop, selectedVehicle: vehicle } : cop
-      ),
-    })),
+  setCurrentCopIndex: (index: number) =>
+    set(() => ({ currentCopIndex: index })),
 
-  moveToNextCop: () =>
-    set((state) => ({
-      currentCopIndex:
-        state.currentCopIndex + 1 < state.cops.length
-          ? state.currentCopIndex + 1
-          : 0,
-    })),
+  moveToNextCopWithNoVehicle: () =>
+    set((state) => {
+      const nextCopIndex = state.cops.findIndex(
+        (cop) => cop.selectedVehicle === null
+      );
+      return {
+        currentCopIndex: nextCopIndex === -1 ? 0 : nextCopIndex,
+      };
+    }),
+
+  moveToNextCopWithNoCity: () =>
+    set((state) => {
+      const nextCopIndex = state.cops.findIndex(
+        (cop) => cop.selectedCity === null
+      );
+
+      console.log("nextCopIndex:", nextCopIndex);
+
+      return {
+        currentCopIndex: nextCopIndex === -1 ? 4 : nextCopIndex,
+      };
+    }),
 
   setInvestigationResult: (result: InvestigationResult) =>
     set(() => ({

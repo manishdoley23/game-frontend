@@ -1,7 +1,7 @@
-import { City } from "@/data/types";
+import { City, Cop } from "@/data/types";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useGameStore } from "@/lib/store";
 import { useNavigate } from "react-router";
 
@@ -14,29 +14,56 @@ export default function CityGridCard({
   isSelected: boolean;
   isUnavailable: boolean;
 }) {
+  const [currentCop, setCurrentCop] = useState<Cop | null>(null);
   const navigate = useNavigate();
-  const moveToNextCop = useGameStore((state) => state.moveToNextCop);
-  const selectCity = useGameStore((state) => state.selectCity);
+  const moveToNextCop = useGameStore((state) => state.moveToNextCopWithNoCity);
+  const selectCity = useGameStore((state) => state.updateCop);
+  const setCurrentCopIndex = useGameStore((state) => state.setCurrentCopIndex);
   const cops = useGameStore((state) => state.cops);
   const currentCopIndex = useGameStore((state) => state.currentCopIndex);
-  const currentCop = cops[currentCopIndex];
 
   const handleCitySelect = useCallback(
-    async (city: City) => {
+    (city: City) => {
       if (!currentCop) return;
-      selectCity(currentCop.id, city);
+      selectCity(currentCop.id, { selectedCity: city });
+
+      const allCitiesSelected = cops.every((cop) => cop.selectedCity);
+      if (allCitiesSelected) {
+        const copWithNoVehicleSelected = cops.findIndex(
+          (cop) => cop.selectedVehicle === null
+        );
+        if (copWithNoVehicleSelected === -1) {
+          setCurrentCopIndex(null);
+        } else {
+          setCurrentCopIndex(copWithNoVehicleSelected);
+        }
+        navigate("/game/select-vehicle");
+        return;
+      }
+
       const nextUnassignedIndex = cops.findIndex(
-        (cop, index) => index > currentCopIndex && cop.selectedCity === null
+        (cop) => cop.selectedCity === null
       );
+
       if (nextUnassignedIndex !== -1) {
         moveToNextCop();
       } else {
-        moveToNextCop();
+        setCurrentCopIndex(0);
         navigate("/game/select-vehicle");
       }
     },
-    [currentCop, cops, currentCopIndex, selectCity, moveToNextCop, navigate]
+    [currentCop, cops, selectCity, moveToNextCop, navigate, setCurrentCopIndex]
   );
+
+  useEffect(() => {
+    if (currentCopIndex === 4) {
+      setCurrentCopIndex(0);
+      navigate("/game/select-vehicle");
+      return;
+    } else if (currentCopIndex !== null) {
+      setCurrentCop(cops[currentCopIndex]);
+    }
+  }, [cops, currentCopIndex, setCurrentCop, navigate, setCurrentCopIndex]);
 
   return (
     <Card

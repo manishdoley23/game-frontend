@@ -10,7 +10,7 @@ export default function SelectCity() {
       {/* City Grid */}
       <CityGrid />
       {/* Progress Indicator */}
-      <CopProgressIndicatorCard />
+      <CopProgressIndicatorCard selectionType="city" />
     </div>
   );
 }

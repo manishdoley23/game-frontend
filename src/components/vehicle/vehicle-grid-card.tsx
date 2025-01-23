@@ -1,33 +1,54 @@
-import { Vehicle } from "@/data/types";
+import { Cop, Vehicle } from "@/data/types";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useGameStore } from "@/lib/store";
+import { toast } from "@/lib/hooks/use-toast";
 
 export default function VehicleGridCard({ vehicle }: { vehicle: Vehicle }) {
-  const moveToNextCop = useGameStore((state) => state.moveToNextCop);
-  const selectVehicle = useGameStore((state) => state.selectVehicle);
+  const [currentCop, setCurrentCop] = useState<Cop | null>(null);
+  const moveToNextCop = useGameStore(
+    (state) => state.moveToNextCopWithNoVehicle
+  );
+  const selectVehicle = useGameStore((state) => state.updateCop);
   const cops = useGameStore((state) => state.cops);
   const currentCopIndex = useGameStore((state) => state.currentCopIndex);
 
-  const currentCop = cops[currentCopIndex];
-
   const handleVehicleSelect = useCallback(
-    async (vehicle: Vehicle) => {
+    (vehicle: Vehicle) => {
       if (!currentCop) return;
 
-      selectVehicle(currentCop.id, vehicle);
+      if (
+        currentCop.selectedCity &&
+        currentCop.selectedCity?.distance > vehicle.range / 2
+      ) {
+        toast({
+          title: "Vehicle Range Error",
+          description:
+            "Vehicle range is not enough to reach the city. Please select a different vehicle",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      selectVehicle(currentCop.id, { selectedVehicle: vehicle });
 
       const nextUnassignedIndex = cops.findIndex(
-        (cop, index) => index > currentCopIndex && cop.selectedVehicle === null
+        (cop) => cop.selectedVehicle === null
       );
 
       if (nextUnassignedIndex !== -1) {
         moveToNextCop();
       }
     },
-    [currentCop, cops, currentCopIndex, selectVehicle, moveToNextCop]
+    [currentCop, cops, selectVehicle, moveToNextCop]
   );
+
+  useEffect(() => {
+    if (currentCopIndex === null) return;
+    const copIndex = cops.findIndex((cop) => cop.selectedVehicle === null);
+    setCurrentCop(cops[copIndex]);
+  }, [cops, currentCopIndex]);
 
   return (
     <Card

@@ -2,6 +2,7 @@ import { Cop } from "@/data/types";
 import { Card, CardContent } from "../ui/card";
 import { useGameStore } from "@/lib/store";
 import { LoadingSpinner } from "../ui/loading-spinner";
+import SelectionCard from "./selection-card";
 
 export default function CopCard({ cop }: { cop: Cop }) {
   const cities = useGameStore((state) => state.cities);
@@ -56,23 +57,25 @@ export default function CopCard({ cop }: { cop: Cop }) {
                 Selected City
               </div>
               {selectedCity ? (
-                <div className="flex items-start justify-center gap-2 flex-col lg:flex-row">
-                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-700">
-                    <img
-                      src={selectedCity.imgSrc}
-                      alt={selectedCity.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <div className="font-medium text-white">
-                      {selectedCity.name}
+                <SelectionCard type="city" copId={cop.id}>
+                  <div className="flex items-start justify-center gap-2 flex-col lg:flex-row">
+                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-700">
+                      <img
+                        src={selectedCity.imgSrc}
+                        alt={selectedCity.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                    <div className="text-sm text-slate-400">
-                      {selectedCity.distance} km
+                    <div>
+                      <div className="font-medium text-white">
+                        {selectedCity.name}
+                      </div>
+                      <div className="text-sm text-slate-400">
+                        {selectedCity.distance} km
+                      </div>
                     </div>
                   </div>
-                </div>
+                </SelectionCard>
               ) : (
                 <div className="h-12 flex items-center text-sm text-slate-500">
                   No city selected
@@ -86,23 +89,25 @@ export default function CopCard({ cop }: { cop: Cop }) {
                 Selected Vehicle
               </div>
               {selectedVehicle ? (
-                <div className="flex items-start gap-2 flex-col lg:flex-row">
-                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-700">
-                    <img
-                      src={selectedVehicle.imgSrc}
-                      alt={selectedVehicle.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <div className="font-medium text-white">
-                      {selectedVehicle.name}
+                <SelectionCard type="vehicle" copId={cop.id}>
+                  <div className="flex items-start gap-2 flex-col lg:flex-row">
+                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-700">
+                      <img
+                        src={selectedVehicle.imgSrc}
+                        alt={selectedVehicle.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                    <div className="text-sm text-slate-400">
-                      Range: {selectedVehicle.range} km
+                    <div>
+                      <div className="font-medium text-white">
+                        {selectedVehicle.name}
+                      </div>
+                      <div className="text-sm text-slate-400">
+                        Range: {selectedVehicle.range} km
+                      </div>
                     </div>
                   </div>
-                </div>
+                </SelectionCard>
               ) : (
                 <div className="h-12 flex items-center text-sm text-slate-500">
                   No vehicle selected

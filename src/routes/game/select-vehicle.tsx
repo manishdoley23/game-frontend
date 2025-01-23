@@ -14,6 +14,7 @@ export default function SelectVehicle() {
   const { toast } = useToast();
   const { setInvestigationResult, cops } = useGameStore();
 
+  const citySelectionComplete = cops.every((cop) => cop.selectedCity);
   const isAllSelectionsComplete = cops.every(
     (cop) => cop.selectedCity && cop.selectedVehicle
   );
@@ -35,7 +36,7 @@ export default function SelectVehicle() {
     }
   };
 
-  if (!currentCop || !currentCop.selectedCity) {
+  if (!currentCop || !currentCop.selectedCity || !citySelectionComplete) {
     navigate("/game/select-city");
     return null;
   }
@@ -50,7 +51,7 @@ export default function SelectVehicle() {
         ))}
       </div>
 
-      <CopProgressIndicatorCard />
+      <CopProgressIndicatorCard selectionType="vehicle" />
 
       {isAllSelectionsComplete && (
         <div className="flex justify-center mt-8">
